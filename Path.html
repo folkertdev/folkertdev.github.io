@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <base href="" />
+        <meta charset="UTF-8"><link rel="shortcut icon" size="16x16, 32x32, 48x48, 64x64, 128x128, 256x256" href="/assets/favicon.ico"><title>Preview your Docs</title><link rel="stylesheet" href="http://package.elm-lang.org/assets/highlight/styles/default.css?1495720958"><link rel="stylesheet" href="http://package.elm-lang.org/assets/style.css?1495720958"><script src="/assets/highlight/highlight.pack.js?1495720958"></script><script src="http://package.elm-lang.org/artifacts/Page-PreviewDocumentation.js?1495720958"></script></head><body><script>
+var page = Elm.Page.PreviewDocumentation.fullscreen();
+
+function handleFileSelect(evt) {
+    var reader = new FileReader();
+    reader.readAsText(evt.target.files[0]);
+    reader.onload = function(event) {
+        page.ports.uploads.send(event.target.result);
+    };
+}
+
+setTimeout(function() {
+  document.getElementById('fileLoader').addEventListener('change', handleFileSelect, false);
+}, 0)
+</script><div><div style="background-color: rgb(238, 238, 238);"><div class="center"><h1 class="header"><a href="/" style="text-decoration: none;"><div style="display: flex;"><img src="/assets/elm_logo.svg" style="height: 30px; vertical-align: bottom; padding-right: 8px;"><div style="color: black;"><div style="line-height: 20px;">elm</div><div style="line-height: 10px; font-size: 0.5em;">packages</div></div></div></a>help</h1></div></div><div style="background-color: rgb(96, 181, 204);"><div class="center"><div class="header-underbar"></div></div></div><div class="center"><div style="width: 600px;"><div><h1 id="preview-your-docs">Preview your Docs</h1>
+</div><input type="file" id="fileLoader" style="margin-left: 1em;"></div><div style="border-top: 1px solid rgb(238, 238, 238); margin-top: 1em;"><div class="entry-list"><h1 class="entry-list-title">Path</h1><span class="markdown-entry"><div><p> Low-level module for working with constructing svg paths</p>
+<p>This module provides a wrapper around the svg path interface. A path can be parsed from a string or build up using the
+svg path primitives, and then converted to a string that can be used in the <a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d"><code>d</code> attribute</a> to render the path.</p>
+<p>Note that this is not the most convenient way of drawing. This package is mainly meant as a primitive to build other packages on top of.
+If you want to visualize data, have a look at <a href="http://package.elm-lang.org/packages/terezka/elm-plot/latest">elm-plot</a> and <a href="http://package.elm-lang.org/packages/gampleman/elm-visualization/latest">elm-visualization</a>. If you want to draw geometry, check out <a href="http://package.elm-lang.org/packages/opensolid/geometry/latest">opensolid</a>.</p>
+<p>For more information on svg paths, see the <a href="https://developer.mozilla.org/en/docs/Web/SVG/Tutorial/Paths.">MDN documentation</a>.</p>
+<h2 id="data-layout">Data Layout</h2>
+<p>A path is a list of subpaths that are drawn in order. A subpath consists of a <a href="#MoveTo"><code>MoveTo</code></a> instruction followed by a list of <a href="#DrawTo"><code>DrawTo</code></a> instructions.</p>
+<p>If the first <a href="#MoveTo"><code>MoveTo</code></a> instruction is a relative one, it is interpreted as an absolute instruction. This makes sure there is always an absolute cursor position.
+The <code>stringify</code> function in this module will always make the first <a href="#MoveTo"><code>MoveTo</code></a> absolute.</p>
+<p>The constructors are exposed, so if you need an escape hatch it is available. As always though, never reach for them if there are other options available.</p>
+<h2 id="data-structures">Data Structures</h2>
+</div></span><div class="docs-entry" id="Coordinate"><div class="docs-annotation"><span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> <a href="#Coordinate" style="font-weight: bold;">Coordinate</a> <span>=</span> 
+    (Float, Float)</div><div class="docs-comment"><div><p> A 2-tuple of floats representing a position in space</p>
+</div></div></div><div class="docs-entry" id="Path"><div class="docs-annotation"><span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> <a href="#Path" style="font-weight: bold;">Path</a> <span>=</span> 
+    List <a href="Path#SubPath">SubPath</a></div><div class="docs-comment"><div><p> A path is a list of <a href="#SubPath"><code>SubPath</code></a>s.</p>
+</div></div></div><div class="docs-entry" id="SubPath"><div class="docs-annotation"><span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> <a href="#SubPath" style="font-weight: bold;">SubPath</a> <span>=</span> 
+    { moveto <span>:</span> <a href="Path#MoveTo">MoveTo</a>
+    , drawtos <span>:</span> List <a href="Path#DrawTo">DrawTo</a>
+    }</div><div class="docs-comment"><div><p> A subpath consists of a <a href="#MoveTo"><code>MoveTo</code></a> instruction followed by a list of <a href="#DrawTo"><code>DrawTo</code></a> instructions</p>
+</div></div></div><div class="docs-entry" id="subpath"><div class="docs-annotation"><a href="#subpath" style="font-weight: bold;">subpath</a> <span>:</span> <a href="Path#MoveTo">MoveTo</a> <span>-&gt;</span> List <a href="Path#DrawTo">DrawTo</a> <span>-&gt;</span> <a href="Path#SubPath">SubPath</a></div><div class="docs-comment"><div><p> Construct a subpath</p>
+<pre><code><span class="hljs-title">subpath</span> (moveTo (<span class="hljs-number">10</span>,<span class="hljs-number">0</span>)) [ lineTo [ (<span class="hljs-number">42</span>, <span class="hljs-number">73</span>) ] ]
+</code></pre></div></div></div><div class="docs-entry" id="stringify"><div class="docs-annotation"><a href="#stringify" style="font-weight: bold;">stringify</a> <span>:</span> <a href="Path#Path">Path</a> <span>-&gt;</span> String</div><div class="docs-comment"><div><p> Turn a <code>Path</code> into a <code>String</code>. The result is ready to be used with the <code>d</code> attribute.</p>
+<pre><code><span class="hljs-title">stringify</span> [ subpath (moveTo (<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)) [ lineBy ( <span class="hljs-number">42</span>, <span class="hljs-number">73</span> ) ] ]
+    <span class="hljs-comment">--&gt; "M0,0 l42,73</span>
+</code></pre></div></div></div><div class="docs-entry" id="parse"><div class="docs-annotation"><a href="#parse" style="font-weight: bold;">parse</a> <span>:</span> String <span>-&gt;</span> Result Error <a href="Path#Path">Path</a></div><div class="docs-comment"><div><p> Parse a path string into a <code>Path</code></p>
+<pre><code><span class="hljs-title">parse</span> <span class="hljs-string">"M0,0 l42,73"</span>
+    <span class="hljs-comment">--&gt; Ok [{ moveto = MoveTo Absolute (0,0), drawtos = [ LineTo Relative  [(42, 73)]]}]</span>
+</code></pre><p>Only accepts valid complete subpaths (a sequences of a move followed by zero or more draws). The types and constructors in the output are
+detailed <a href="#internal-data-used-by-the-parser-">here</a>.</p>
+<p>The parser uses <a href="http://package.elm-lang.org/packages/elm-tools/parser/2.0.1/"><code>elm-tools/parser</code></a>.
+The error type is <a href="http://package.elm-lang.org/packages/elm-tools/parser/2.0.1/Parser#Error"><code>Parser.Error</code></a>.</p>
+</div></div></div><div class="docs-entry" id="mapCoordinate"><div class="docs-annotation"><a href="#mapCoordinate" style="font-weight: bold;">mapCoordinate</a> <span>:</span> (<a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#Coordinate">Coordinate</a>) <span>-&gt;</span> <a href="Path#Path">Path</a> <span>-&gt;</span> <a href="Path#Path">Path</a></div><div class="docs-comment"><div><p> Manipulate the coordinates in your SVG. This can be useful for scaling the svg.</p>
+<pre><code><span class="hljs-comment">-- make the image twice as big in the x direction</span>
+[ subpath (moveTo (<span class="hljs-number">10</span>,<span class="hljs-number">0</span>)) [ lineTo [ (<span class="hljs-number">42</span>, <span class="hljs-number">42</span>) ] ] ]
+    |&gt; mapCoordinate (\(x,y) -&gt; (<span class="hljs-number">2</span> * x, y))
+         <span class="hljs-comment">--&gt; [ subpath (moveTo (20,0)) [ lineTo [ (84, 42) ] ] ]</span>
+</code></pre></div></div></div><span class="markdown-entry"><div><h2 id="moving-the-cursor">Moving the cursor</h2>
+</div></span><div class="docs-entry" id="MoveTo"><div class="docs-annotation"><span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> <a href="#MoveTo" style="font-weight: bold;">MoveTo</a> <span>=</span> 
+    <a href="Path#AbstractMoveTo">AbstractMoveTo</a> <a href="Path#Mode">Mode</a></div><div class="docs-comment"><div><p> MoveTo instructions move the cursor, but don't draw anything.</p>
+</div></div></div><div class="docs-entry" id="moveTo"><div class="docs-annotation"><a href="#moveTo" style="font-weight: bold;">moveTo</a> <span>:</span> <a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#MoveTo">MoveTo</a></div><div class="docs-comment"><div><p> Move the cursor to an absolute position on the canvas</p>
+</div></div></div><div class="docs-entry" id="moveBy"><div class="docs-annotation"><a href="#moveBy" style="font-weight: bold;">moveBy</a> <span>:</span> <a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#MoveTo">MoveTo</a></div><div class="docs-comment"><div><p> Move the cursor by some amount</p>
+</div></div></div><span class="markdown-entry"><div><h2 id="drawing-on-the-canvas">Drawing on the canvas</h2>
+</div></span><div class="docs-entry" id="DrawTo"><div class="docs-annotation"><span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> <a href="#DrawTo" style="font-weight: bold;">DrawTo</a> <span>=</span> 
+    <a href="Path#AbstractDrawTo">AbstractDrawTo</a> <a href="Path#Mode">Mode</a></div><div class="docs-comment"><div><p> DrawTo instructions draw from the current cursor position to their target.</p>
+</div></div></div><span class="markdown-entry"><div><h2 id="straight-lines">Straight lines</h2>
+</div></span><div class="docs-entry" id="lineTo"><div class="docs-annotation"><a href="#lineTo" style="font-weight: bold;">lineTo</a> <span>:</span> List <a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Draw a series of line segments to absolute positions</p>
+</div></div></div><div class="docs-entry" id="lineBy"><div class="docs-annotation"><a href="#lineBy" style="font-weight: bold;">lineBy</a> <span>:</span> List <a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Draw a series of line segments relative to the current cursor position</p>
+</div></div></div><div class="docs-entry" id="horizontalTo"><div class="docs-annotation"><a href="#horizontalTo" style="font-weight: bold;">horizontalTo</a> <span>:</span> List Float <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Specific version of <code>lineTo</code> that only moves horizontally.</p>
+</div></div></div><div class="docs-entry" id="horizontalBy"><div class="docs-annotation"><a href="#horizontalBy" style="font-weight: bold;">horizontalBy</a> <span>:</span> List Float <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Specific version of <code>lineBy</code> that only moves horizontally</p>
+<pre><code><span class="hljs-title">horizontalBy</span> [ x ] == lineBy [ (x, <span class="hljs-number">0</span>) ]
+</code></pre></div></div></div><div class="docs-entry" id="verticalTo"><div class="docs-annotation"><a href="#verticalTo" style="font-weight: bold;">verticalTo</a> <span>:</span> List Float <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Specific version of <code>lineTo</code> that only moves vertically</p>
+</div></div></div><div class="docs-entry" id="verticalBy"><div class="docs-annotation"><a href="#verticalBy" style="font-weight: bold;">verticalBy</a> <span>:</span> List Float <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Specific version of <code>lineBy</code> that only moves vertically</p>
+<pre><code><span class="hljs-title">verticalBy</span> [ y ] == lineBy [ (<span class="hljs-number">0</span>, y) ]
+</code></pre></div></div></div><span class="markdown-entry"><div><h2 id="close-path">Close Path</h2>
+</div></span><div class="docs-entry" id="closePath"><div class="docs-annotation"><a href="#closePath" style="font-weight: bold;">closePath</a> <span>:</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div><p> Draw a straight line from the cursor position to the starting position of the path .</p>
+</div></div></div><span class="markdown-entry"><div><h2 id="quadratic-beziers">Quadratic Beziers</h2>
+</div></span><div class="docs-entry" id="quadraticCurveTo"><div class="docs-annotation"><a href="#quadraticCurveTo" style="font-weight: bold;">quadraticCurveTo</a> <span>:</span> List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>) <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="quadraticCurveBy"><div class="docs-annotation"><a href="#quadraticCurveBy" style="font-weight: bold;">quadraticCurveBy</a> <span>:</span> List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>) <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="quadraticCurveExtendTo"><div class="docs-annotation"><a href="#quadraticCurveExtendTo" style="font-weight: bold;">quadraticCurveExtendTo</a> <span>:</span> List <a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="quadraticCurveExtendBy"><div class="docs-annotation"><a href="#quadraticCurveExtendBy" style="font-weight: bold;">quadraticCurveExtendBy</a> <span>:</span> List <a href="Path#Coordinate">Coordinate</a> <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><span class="markdown-entry"><div><h2 id="cubic-beziers">Cubic Beziers</h2>
+<p>Every Cubic bezier can also be drawn by two quadratic beziers. The cubic bezier is thus a more compact way of writing a curve.</p>
+</div></span><div class="docs-entry" id="cubicCurveTo"><div class="docs-annotation"><a href="#cubicCurveTo" style="font-weight: bold;">cubicCurveTo</a>
+    <span>:</span>  List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>)
+    <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="cubicCurveBy"><div class="docs-annotation"><a href="#cubicCurveBy" style="font-weight: bold;">cubicCurveBy</a>
+    <span>:</span>  List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>)
+    <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="cubicCurveExtendTo"><div class="docs-annotation"><a href="#cubicCurveExtendTo" style="font-weight: bold;">cubicCurveExtendTo</a> <span>:</span> List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>) <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="cubicCurveExtendBy"><div class="docs-annotation"><a href="#cubicCurveExtendBy" style="font-weight: bold;">cubicCurveExtendBy</a> <span>:</span> List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>) <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><span class="markdown-entry"><div><h2 id="arcs">Arcs</h2>
+</div></span><div class="docs-entry" id="arcTo"><div class="docs-annotation"><a href="#arcTo" style="font-weight: bold;">arcTo</a> <span>:</span> List <a href="Path#EllipticalArcArgument">EllipticalArcArgument</a> <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="arcBy"><div class="docs-annotation"><a href="#arcBy" style="font-weight: bold;">arcBy</a> <span>:</span> List <a href="Path#EllipticalArcArgument">EllipticalArcArgument</a> <span>-&gt;</span> <a href="Path#DrawTo">DrawTo</a></div><div class="docs-comment"><div></div></div></div><div class="docs-entry" id="EllipticalArcArgument"><div class="docs-annotation"><span class="hljs-keyword">type</span> <span class="hljs-keyword">alias</span> <a href="#EllipticalArcArgument" style="font-weight: bold;">EllipticalArcArgument</a> <span>=</span> 
+    { radii <span>:</span> (Float, Float)
+    , xAxisRotate <span>:</span> Float
+    , arcFlag <span>:</span> <a href="Path#ArcFlag">ArcFlag</a>
+    , direction <span>:</span> <a href="Path#Direction">Direction</a>
+    , target <span>:</span> <a href="Path#Coordinate">Coordinate</a>
+    }</div><div class="docs-comment"><div><p> The arguments for an Arc</p>
+</div></div></div><div class="docs-entry" id="Direction"><div class="docs-annotation"><span class="hljs-keyword">type</span> <a href="#Direction" style="font-weight: bold;">Direction</a></div><div class="docs-comment"><div><p> Determine which arc to draw</p>
+</div></div></div><div class="docs-entry" id="clockwise"><div class="docs-annotation"><a href="#clockwise" style="font-weight: bold;">clockwise</a> <span>:</span> <a href="Path#Direction">Direction</a></div><div class="docs-comment"><div><p> Corresponds to a sweep flag of 1</p>
+</div></div></div><div class="docs-entry" id="counterClockwise"><div class="docs-annotation"><a href="#counterClockwise" style="font-weight: bold;">counterClockwise</a> <span>:</span> <a href="Path#Direction">Direction</a></div><div class="docs-comment"><div><p> Corresponds to a sweep flag of 0</p>
+</div></div></div><div class="docs-entry" id="ArcFlag"><div class="docs-annotation"><span class="hljs-keyword">type</span> <a href="#ArcFlag" style="font-weight: bold;">ArcFlag</a></div><div class="docs-comment"><div><p> Determine which arc to draw</p>
+</div></div></div><div class="docs-entry" id="largestArc"><div class="docs-annotation"><a href="#largestArc" style="font-weight: bold;">largestArc</a> <span>:</span> <a href="Path#ArcFlag">ArcFlag</a></div><div class="docs-comment"><div><p> Corresponds to an arc flag of 1</p>
+</div></div></div><div class="docs-entry" id="smallestArc"><div class="docs-annotation"><a href="#smallestArc" style="font-weight: bold;">smallestArc</a> <span>:</span> <a href="Path#ArcFlag">ArcFlag</a></div><div class="docs-comment"><div><p> Corresponds to an arc flag of 0</p>
+</div></div></div><span class="markdown-entry"><div><h2 id="internal-data-used-by-the-parser-">Internal Data (used by the parser)</h2>
+<p>These constructors can be used when you want to modify the path in some custom way.</p>
+</div></span><div class="docs-entry" id="AbstractMoveTo"><div class="docs-annotation"><span class="hljs-keyword">type</span> <a href="#AbstractMoveTo" style="font-weight: bold;">AbstractMoveTo</a> mode
+    = MoveTo mode <a href="Path#Coordinate">Coordinate</a></div><div class="docs-comment"><div><p> Constructor for MoveTo instructions</p>
+</div></div></div><div class="docs-entry" id="AbstractDrawTo"><div class="docs-annotation"><span class="hljs-keyword">type</span> <a href="#AbstractDrawTo" style="font-weight: bold;">AbstractDrawTo</a> mode
+    = LineTo mode (List <a href="Path#Coordinate">Coordinate</a>)
+    | Horizontal mode (List Float)
+    | Vertical mode (List Float)
+    | CurveTo mode (List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>))
+    | SmoothCurveTo mode (List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>))
+    | QuadraticBezierCurveTo mode (List (<a href="Path#Coordinate">Coordinate</a>, <a href="Path#Coordinate">Coordinate</a>))
+    | SmoothQuadraticBezierCurveTo mode (List <a href="Path#Coordinate">Coordinate</a>)
+    | EllipticalArc mode (List <a href="Path#EllipticalArcArgument">EllipticalArcArgument</a>)
+    | ClosePath</div><div class="docs-comment"><div><p> Constructors for DrawTo instructions</p>
+</div></div></div><div class="docs-entry" id="Mode"><div class="docs-annotation"><span class="hljs-keyword">type</span> <a href="#Mode" style="font-weight: bold;">Mode</a>
+    = Relative
+    | Absolute</div><div class="docs-comment"><div><p> The mode of an instruction</p>
+</div></div></div></div><div class="pkg-nav"><ul class="pkg-nav-value"><li><a class="pkg-nav-module" href="#Path">Path</a></li></ul></div></div></div><div class="footer">All code for this site is open source and written in Elm. <a class="grey-link" href="https://github.com/elm-lang/package.elm-lang.org/">Check it out</a>! — © 2012-2016 Evan Czaplicki</div></div></body></html>
